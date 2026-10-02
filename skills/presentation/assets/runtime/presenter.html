@@ -1,0 +1,46 @@
+<!doctype html>
+<html><!-- lang: from talk.lang in src/beats.ts, written in by the build (vite.config.ts) and set again at runtime -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Presenter</title>
+  </head>
+  <body>
+    <div id="ready" title="Moving: wait for rest" hidden></div>
+    <header id="top">
+      <div class="bar">
+        <div id="clock"><span id="time"></span><span id="unit"></span></div>
+        <div id="pace" class="is-idle"><span class="glyph" aria-hidden="true"></span><span id="pace-text"></span></div>
+        <div class="meta">
+          <span id="slide"></span>
+          <div id="theme-box">
+            <button id="save" type="button" disabled><i class="icon"></i></button>
+            <button id="theme" type="button" title="Colour theme"><i class="icon"></i></button>
+          </div>
+        </div>
+      </div>
+      <div id="strip"><div id="track"></div><div id="playhead" hidden></div></div>
+    </header>
+    <main id="now">
+      <div class="book">
+        <h2 id="label"></h2>
+        <div id="notes"></div>
+      </div>
+    </main>
+    <aside class="frames">
+      <figure class="next">
+        <div class="mon">
+          <iframe id="preview" title="Next beat" tabindex="-1"></iframe>
+          <img id="preview-still" alt="" hidden />
+        </div>
+      </figure>
+      <figure class="now">
+        <div class="mon">
+          <iframe id="current" title="The room sees" tabindex="-1"></iframe>
+          <img id="current-still" alt="" hidden />
+        </div>
+      </figure>
+    </aside>
+    <script type="module" src="/src/runtime/presenter.ts"></script>
+  </body>
+</html>

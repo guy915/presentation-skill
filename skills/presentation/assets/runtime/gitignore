@@ -1,0 +1,11 @@
+node_modules
+dist/
+# generated files: builds, shots, screening, test output
+out/
+test-results/
+playwright-report/
+.DS_Store
+# fetched clips (npm run media:fetch): local only, shipped by deploy
+public/media/
+# rest stills (npm run shots): the stand-in when a section's code fails; shipped by deploy
+public/rest/

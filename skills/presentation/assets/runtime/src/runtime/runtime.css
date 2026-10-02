@@ -1,0 +1,39 @@
+/* Mechanics only: the stage, the one section that shows, and the runtime's
+   own elements. The talk's look lives in its sections and in
+   src/theme.css, loaded after this file, which sets these tokens' values. */
+:root { --type-floor: 24px; --ground: #fff; --font-text: system-ui, sans-serif; } /* --font-text: a generic fallback until src/theme.css names the talk's bundled face */
+html, body { height: 100%; margin: 0; overflow: hidden; background: var(--ground); }
+#stage {
+  position: absolute; top: 0; left: 0;
+  /* set by the engine from talk.aspect (stageSize in manifest.ts) */
+  width: var(--stage-w, 1920px); height: var(--stage-h, 1080px);
+  transform-origin: top left;
+  background: var(--ground); color: #111;
+  font-family: var(--font-text); line-height: 1;
+  user-select: none;
+  /* Shown by deck.ts once the first beat has settled: nothing half-built ever
+     paints. Opacity, not visibility: a child's own visibility:visible shows
+     through a hidden parent. */
+  opacity: 0;
+}
+/* One <section> per section. Every section stays laid out so scenes can measure;
+   deck.ts marks the one that shows .present. Opacity too: a child's own
+   visibility:visible would show through a hidden section. */
+#stage > .slides, #stage > .slides > section {
+  position: absolute; inset: 0; margin: 0; padding: 0; box-sizing: border-box; text-align: left;
+}
+#stage > .slides { overflow: clip; touch-action: pinch-zoom; } /* nothing bleeds into the bars or scrolls the stage */
+#stage > .slides > section { isolation: isolate; visibility: hidden; opacity: 0; pointer-events: none; }
+#stage > .slides > section.present { visibility: visible; opacity: 1; pointer-events: auto; }
+.rt-idle, .rt-idle * { cursor: none !important; }
+/* a clip's poster, over it while it rests before its beat (src/runtime/video.ts copies its box) */
+.rt-poster { position: absolute; margin: 0; pointer-events: none; box-sizing: border-box; }
+.rt-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.rt-placeholder-area { position: absolute; inset: 5%; } /* the action-safe area at any aspect */
+.rt-placeholder {
+  box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  padding: 32px max(32px, calc((100% - 28em) / 2)); /* lines of about 50 characters at any aspect */
+  background: #ddd; border: 4px dashed #777; color: #222;
+  font: 64px/1.3 var(--font-text); text-align: center; overflow-wrap: anywhere;
+}

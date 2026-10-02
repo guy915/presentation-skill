@@ -1,0 +1,12 @@
+{
+  "name": "presentation-skill",
+  "description": "The presentation skill: live talks built as click-driven web apps.",
+  "owner": { "name": "Guy Barel" },
+  "plugins": [
+    {
+      "name": "presentation",
+      "source": "./",
+      "description": "Direct, build and publish a live talk as a click-driven web app."
+    }
+  ]
+}

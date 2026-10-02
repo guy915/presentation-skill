@@ -1,0 +1,239 @@
+/* The speaker view (presenter.html): for the speaker alone, read at a glance
+   from 50–70 cm on a 13–16" laptop in a dim hall. Its look is fixed, the same
+   in every talk; this page never loads src/theme.css. Keep this file as shipped.
+
+   Look: a white ground (charcoal in the dark theme), filled grey planes, DM
+   Sans (medium headings, tight tracking) and DM Mono for numbers, both bundled
+   (SIL OFL 1.1). Each role colour comes as a stroke, a soft fill and a
+   text-safe ink, and always with a word or a shape: blue is your click, "on
+   plan" and the next frame; amber is behind plan and a gap in the script;
+   orange is past the slot. Every number uses tabular figures. Contrast (WCAG),
+   dark and light: script 13.6:1 and 19.4:1; stage directions and labels 7.8:1
+   and 6.6:1; strip labels at least 6.1:1 and 5.6:1; the click pill 6.7:1 and
+   7.3:1; the pace pill 6.5–6.8:1 and 4.5–7.3:1; time over the slot 9.0:1 and 5.4:1.
+
+   Size: every size scales with the window (one unit, --u = min(1vw, 1.6vh)).
+   At 1440×900 the script is about 39 px, the cue 48 px and the time since the
+   start 72 px; never below 30, 40 and 52 px. Under 1100 px wide the toolbar
+   wraps and stays at the top, the monitors follow the script, and the page
+   scrolls. One spacing grid: 8 16 24 32 px.
+
+   Toolbar (top, one baseline): on the left the time since the start in whole
+   minutes (rounded down), the largest figure in the view, with "min" beside
+   it, orange past the slot. In the centre the pace, a capsule with a word and
+   a shape: "Not Started" (grey) until the clock starts; "▲ 1 min behind"
+   (amber) when the clock is past the planned end of this beat; "▼ 2 min ahead"
+   (blue) when it is 60 s or more before the planned arrival at this beat;
+   "● On Plan" (blue) between the two; "■ 3 min over" (orange) past the slot.
+   A gap under a minute reads "< 1 min"; a longer one rounds down. On the
+   right "Slide 3 of 6" (a slide is a section run: consecutive beats that
+   share a section), the save button (an arrow down; after a rehearsal, a
+   press downloads the time each beat stayed on screen as JSON; dimmed until
+   the clock starts) and the theme button: a sun in light, a moon in dark; a
+   press swaps the theme for this window until it closes.
+
+   Talk strip (under the toolbar): one capsule segment per section run, as
+   wide as its planned time; preshow and credits runs take no room unless
+   current. Past runs are filled; the current one has its name in semibold and
+   a raised fill up to the planned end of this beat; future ones are quieter.
+   A long name ends in "…"; a segment too narrow for three characters shows
+   none. The playhead (a line with a knob) is the clock on the plan's scale,
+   blue on plan or ahead, amber behind, red past the slot; it appears when the
+   clock starts.
+
+   Script (left): the cue, then the script, its left edge in line with the
+   toolbar. [click] within a slide is a play mark in a soft blue pill; a click
+   that opens the next slide is a solid blue pill with a play mark and "slide
+   n". [FILL …], [CONFIRM …] and [TODO …] sit on a soft amber fill; other
+   brackets are stage directions, in grey. The script never scrolls: cue and
+   script shrink together until the beat fits (presenter.ts, fit).
+
+   Monitors (right): the next beat first and largest, then, about half as
+   wide, what the room sees now; no next frame on the last beat. Rounded
+   corners, the slides only.
+
+   Ready bar: a thin blue line across the top of the window while the deck
+   still moves. */
+
+/* Type: DM Sans (upright) and DM Mono 500 for the clock digits (SIL OFL 1.1, public/fonts/dm-sans/ and dm-mono/).
+   url("/fonts/…") is rewritten by the build (sub-path safe). */
+@font-face { font-family: "DM Sans Variable"; font-style: normal; font-weight: 100 1000; font-display: block;
+  src: url("/fonts/dm-sans/dm-sans-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "DM Sans Variable"; font-style: normal; font-weight: 100 1000; font-display: block;
+  src: url("/fonts/dm-sans/dm-sans-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "DM Mono"; font-style: normal; font-weight: 500; font-display: block;
+  src: url("/fonts/dm-mono/dm-mono-latin-500-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+
+/* Tokens: role colours as a stroke (shapes, rings), a soft fill and a
+   text-safe ink. The dark theme keeps the same roles on a charcoal ground. */
+:root {
+  color-scheme: dark;
+  --bg: #212121; --panel-2: #333333; --panel-3: #4a4a4a;
+  --material: #212121; --halo: #212121; --sep: #383838; --shadow: 0 0 #0000;
+  --label: #ececec; --label-2: #b4b4b4; --dir: #b4b4b4;
+  --blue: #5b9cff; --orange: #e0a526; --red: #ff8a57;
+  --blue-text: #9cc4ff; --orange-text: #f2c14e; --red-text: #ffae8a;
+  --blue-soft: rgba(91, 156, 255, 0.18); --orange-soft: rgba(224, 165, 38, 0.18); --red-soft: rgba(255, 138, 87, 0.18);
+  --fill: #2f2f2f; --thumb: #4a4a4a; --on-blue: #0d0d0d; --pill: #5b9cff;
+  --over-bg: var(--red-soft); --over-ink: var(--red-text);
+  --on: var(--blue); --late: var(--orange); --over: var(--red); /* the pace, as a shape */
+  /* One unit scales the whole view with the window, so a small laptop screen seen from a
+     distance keeps the same proportions: 14.4 px at 1440×900, 12.8 at 1280×800, 19.2 at 1920×1200. */
+  --u: min(1vw, 1.6vh);
+  --monitors: clamp(360px, min(56vw, (100vh - 16 * var(--u)) * 1.14), 1200px); /* the next frame large, the frame now under it, both in the height */
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #ffffff; --panel-2: #ececec; --panel-3: #d6d6d6;
+    --material: #ffffff; --halo: #ffffff; --sep: #e3e3e3; --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.07);
+    --label: #0d0d0d; --label-2: #5d5d5d; --dir: #5d5d5d;
+    --blue: #3a83f7; --orange: #c28400; --red: #d25e28;
+    --blue-text: #1f4e94; --orange-text: #7a5200; --red-text: #ac4f23;
+    --blue-soft: #e8f3fe; --orange-soft: #fdf3d9; --red-soft: #fbe8db;
+    --fill: #f3f3f3; --thumb: #ffffff; --on-blue: #ffffff; --pill: #1f4e94;
+    --over-bg: var(--red-soft); --over-ink: var(--red-text);
+  }
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff; --panel-2: #ececec; --panel-3: #d6d6d6;
+  --material: #ffffff; --halo: #ffffff; --sep: #e3e3e3; --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.07);
+  --label: #0d0d0d; --label-2: #5d5d5d; --dir: #5d5d5d;
+  --blue: #3a83f7; --orange: #c28400; --red: #d25e28;
+  --blue-text: #1f4e94; --orange-text: #7a5200; --red-text: #ac4f23;
+  --blue-soft: #e8f3fe; --orange-soft: #fdf3d9; --red-soft: #fbe8db;
+  --fill: #f3f3f3; --thumb: #ffffff; --on-blue: #ffffff; --pill: #1f4e94;
+  --over-bg: var(--red-soft); --over-ink: var(--red-text);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--monitors);
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--bg); color: var(--label);
+  font-family: "DM Sans Variable", sans-serif; letter-spacing: -0.01em;
+  font-weight: 400; font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+[hidden] { display: none !important; }
+b { font-weight: 500; color: var(--label); }
+#time { font-family: "DM Mono", monospace; letter-spacing: 0; } /* numbers: DM Mono */
+
+/* Ready bar: a thin blue line across the top of the window while the deck still moves, gone at rest. */
+#ready { position: fixed; inset: 0 0 auto 0; height: 4px; background: var(--blue); z-index: 2; }
+
+/* ---- Toolbar: the page ground with a hairline under it. */
+#top {
+  grid-column: 1 / -1; padding: calc(1 * var(--u)) calc(2 * var(--u)) calc(1.2 * var(--u));
+  background: var(--material);
+  border-bottom: 1px solid var(--sep);
+}
+.bar { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: baseline; column-gap: 24px; }
+
+/* the time since the start: the largest figure in the view */
+#clock { display: flex; align-items: baseline; gap: 10px; white-space: nowrap; }
+#time { font-size: clamp(52px, 5 * var(--u), 96px); font-weight: 500; line-height: 1; color: var(--label); }
+#unit { font-size: clamp(18px, 1.6 * var(--u), 30px); font-weight: 400; color: var(--label-2); }
+#clock.is-over #time, #clock.is-over #unit { color: var(--red-text); }
+
+/* pace: a tinted capsule with a word and a shape */
+#pace {
+  --c: var(--label-2); --bgc: var(--fill);
+  justify-self: center; display: inline-flex; align-items: baseline; gap: 0.45em; padding: 0.25em 0.85em; border-radius: 999px;
+  font-size: clamp(18px, 1.7 * var(--u), 32px); font-weight: 500; line-height: 1.3; white-space: nowrap; color: var(--c); background: var(--bgc);
+}
+#pace.is-on, #pace.is-ahead { --c: var(--blue-text); --bgc: var(--blue-soft); }
+#pace.is-behind { --c: var(--orange-text); --bgc: var(--orange-soft); }
+#pace.is-over { --c: var(--over-ink); --bgc: var(--over-bg); }
+/* the shape carries the state without colour: ▲ behind, ● on plan, ▼ ahead, ■ over; none before the start */
+.glyph { align-self: center; flex: none; width: 14px; height: 14px; background: currentColor; -webkit-mask: var(--shape) center / contain no-repeat; mask: var(--shape) center / contain no-repeat; }
+.is-idle .glyph { display: none; }
+.is-on .glyph { --shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Ccircle cx='7' cy='7' r='6'/%3E%3C/svg%3E"); }
+.is-behind .glyph { --shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 2.2 12.6 12H1.4Z' stroke='%23000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.is-ahead .glyph { --shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 11.8 12.6 2H1.4Z' stroke='%23000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.is-over .glyph { --shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Crect x='1.5' y='1.5' width='11' height='11' rx='2.5'/%3E%3C/svg%3E"); width: 13px; height: 13px; }
+
+/* the slide, and the theme */
+.meta { justify-self: end; display: flex; align-items: center; gap: calc(1.6 * var(--u)); white-space: nowrap; font-size: clamp(26px, 2.4 * var(--u), 44px); font-weight: 400; color: var(--label-2); }
+/* save and theme: round buttons. Save: an arrow down, a press downloads the rehearsal. Theme: a sun in light and a moon in dark; a press swaps */
+#theme-box { align-self: center; display: flex; gap: 16px; }
+#theme, #save {
+  display: grid; place-items: center; width: clamp(40px, 3 * var(--u), 56px); aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  color: var(--label-2); background: var(--fill);
+}
+#theme:hover, #save:hover:enabled { color: var(--label); }
+#save:disabled { cursor: default; opacity: 0.4; }
+#save { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.5v11.5M6.8 10.2 12 15.4l5.2-5.2M4.5 20h15'/%3E%3C/svg%3E"); }
+#theme .icon, #save .icon { width: 55%; aspect-ratio: 1; background: currentColor; -webkit-mask: var(--glyph) center / contain no-repeat; mask: var(--glyph) center / contain no-repeat; }
+#theme[data-shows="light"] { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.2' fill='%23000'/%3E%3Cpath d='M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6'/%3E%3C/svg%3E"); }
+#theme[data-shows="dark"] { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z'/%3E%3C/svg%3E"); }
+#theme:focus-visible, #save:focus-visible { outline: 3px solid color-mix(in srgb, var(--blue) 50%, transparent); outline-offset: 2px; }
+
+/* ---- Talk strip: a capsule track, one segment per section run, as wide as its planned time. */
+#strip { position: relative; margin-top: 16px; }
+#track { display: flex; gap: 2px; height: clamp(28px, 2.5 * var(--u), 46px); border-radius: 9999px; overflow: hidden; }
+.run.is-zero:not(.is-current) { min-width: 0; flex-basis: 0; margin-right: -2px; visibility: hidden; } /* preshow and credits take no room */
+.run {
+  position: relative; flex: 0 1 0px; min-width: 8px; container-type: inline-size;
+  display: flex; align-items: center; overflow: hidden; background: var(--panel-2);
+  color: var(--label-2); font-size: clamp(15px, 1.3 * var(--u), 24px); font-weight: 500; line-height: 1;
+}
+.run:first-child span { padding-left: 16px; }
+.run span { position: relative; display: block; min-width: 0; padding: 0 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.run .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--thumb); } /* the current run: the raised thumb, as in a segmented control */
+.run.is-past { background: var(--panel-3); color: var(--label); }
+.run.is-current { color: var(--label); font-weight: 500; }
+.run:not(.is-current) .fill { display: none; }
+@container (width < 52px) { .run span { visibility: hidden; } } /* too narrow for three characters */
+/* the playhead: the clock on the plan's scale, in the pace colour, a knob on a line */
+#playhead { position: absolute; top: -6px; bottom: -6px; width: 3px; margin-left: -1.5px; border-radius: 1.5px; background: var(--on); color: var(--on); box-shadow: 0 0 0 1.5px var(--halo); pointer-events: none; }
+#playhead::before { content: ""; position: absolute; top: -4px; left: -4px; width: 11px; height: 11px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 1.5px var(--halo); }
+#playhead.is-behind { background: var(--late); color: var(--late); }
+#playhead.is-over { background: var(--over); color: var(--over); }
+
+/* ---- Script: the cue, then the script, the full width of its column; it shrinks to fit (presenter.ts, fit) and never scrolls. */
+#now { --fit: 1; grid-row: 2; min-height: 0; overflow: hidden; padding: calc(2 * var(--u)) calc(2 * var(--u)) calc(2 * var(--u)) calc(2 * var(--u)); } /* the left edge lines up with the toolbar */
+.book { position: relative; }
+#label { margin: 0 0 0.45em; font-size: calc(clamp(40px, 3.3 * var(--u), 64px) * var(--fit)); font-weight: 500; line-height: 1.15; letter-spacing: -0.025em; color: var(--label); text-wrap: balance; }
+#notes { white-space: pre-wrap; font-size: calc(clamp(30px, 2.7 * var(--u), 52px) * var(--fit)); line-height: 1.4; }
+#notes .gap { display: block; height: 0.5em; }
+#notes .dir { color: var(--dir); }
+/* A click: within this slide, a play mark in a soft blue pill (the next beat); to the next
+   slide, a solid blue pill with a play mark and "slide n", so a change of slide stands out. */
+#notes .click {
+  display: inline-flex; align-items: center; gap: 0.3em; height: 1em; min-width: 1.5em; padding: 0 0.45em; border-radius: 9999px; vertical-align: -0.08em;
+  font-size: 1em; font-weight: 500; line-height: 1; white-space: nowrap; color: var(--blue-text); background: var(--blue-soft);
+}
+#notes .click::before {
+  content: ""; flex: none; width: 0.6em; height: 0.6em; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 1.5v13l11-6.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 1.5v13l11-6.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+#notes .click.is-slide { height: 1.15em; padding: 0 0.55em; font-size: 0.72em; vertical-align: 0.05em; color: var(--on-blue); background: var(--pill); }
+#notes .mark { padding: 0 6px; border-radius: 6px; font-weight: 500; color: var(--orange-text); background: var(--orange-soft); } /* still missing: a soft amber fill, not dimmed */
+
+/* ---- Monitors: the next frame first and largest, then the frame the room sees now, smaller. Only the slides, with rounded corners. */
+.frames { --gap: calc(1.6 * var(--u)); grid-row: 2; container-type: size; display: flex; flex-direction: column; align-items: flex-start; gap: var(--gap); min-height: 0; overflow: visible; padding: var(--gap) calc(2 * var(--u)) var(--gap) 0; }
+figure { margin: 0; width: 100%; }
+/* the frame now takes the height left under the next one (never wider than it, never under 40% of it) */
+figure.now { width: clamp(40%, (100cqh - var(--gap) - 100cqw * var(--stage-hw, 0.5625)) / var(--stage-hw, 0.5625) - 2px, 100%); } /* cq units: the content box */
+.mon { border-radius: 16px; overflow: hidden; background: var(--panel-2); box-shadow: var(--shadow); } /* the slide itself, rounded; a soft shadow lifts a white slide off the light page */
+iframe, .mon img {
+  display: block; width: 100%; aspect-ratio: var(--stage-aspect, 16 / 9); /* set from talk.aspect */
+  border: 0; pointer-events: none; background: var(--panel-2); color: var(--label-2); font-size: 14px; object-fit: contain;
+}
+
+/* A narrow window: the toolbar wraps, the monitors stack under the script, and the page scrolls. */
+@media (max-width: 1100px) {
+  body { height: auto; min-height: 100%; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  #top { position: sticky; top: 0; z-index: 1; padding: 16px 24px 20px; } /* the toolbar stays, the page scrolls under it */
+  .bar { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 24px; }
+  .meta { margin-left: auto; }
+  #now, .frames { grid-row: auto; overflow: visible; padding: 24px; }
+}

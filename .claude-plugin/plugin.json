@@ -1,0 +1,14 @@
+{
+  "name": "presentation",
+  "description": "Direct, build and publish a live talk as a click-driven web app: story, visuals, speaker view, tests and a shareable link.",
+  "version": "1.0.1",
+  "author": {
+    "name": "Guy Barel"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/guy915/presentation-skill",
+  "homepage": "https://github.com/guy915/presentation-skill",
+  "documentationUrl": "https://github.com/guy915/presentation-skill#readme",
+  "supportUrl": "https://github.com/guy915/presentation-skill/issues",
+  "privacyPolicyUrl": "https://github.com/guy915/presentation-skill#privacy"
+}

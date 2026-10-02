@@ -1,0 +1,14 @@
+/* The talk's look: its faces and design tokens. src/main.ts loads this after
+   src/runtime/runtime.css, so every value set here wins. Set them here. */
+
+/* Faces: the text face the talk's treatment picks, bundled with the talk (RUNTIME.md, "Fonts"):
+   its woff2 files and licence under public/fonts/<face>/, one @font-face rule per file here,
+   each with url("/fonts/<face>/…") and the file's unicode-range. */
+
+:root {
+  --ground: #fff; /* the talk's background: the stage and the bars around it on a 4:3 or 16:10 screen */
+  --type-floor: 24px; /* the smallest text on stage, in stage px; raise it for display faces or a coarse LED wall */
+  /* --font-text: "<Face>", sans-serif; the text face: the family the @font-face rules above declare.
+     Until it is set, text renders in the runtime's generic fallback, which only placeholders may use. */
+  /* the talk's colour, spacing and motion tokens go here, e.g. --ink: #111; --accent: …; --gap: …; --ease: …; */
+}

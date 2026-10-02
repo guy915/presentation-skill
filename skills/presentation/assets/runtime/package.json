@@ -1,0 +1,32 @@
+{
+  "name": "talk",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "playwright test",
+    "test:runtime": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "timing": "node scripts/timing.ts",
+    "beats": "node scripts/beats.ts",
+    "shots": "node scripts/shots.ts",
+    "screening": "node scripts/screening.ts",
+    "handout": "node scripts/handout.ts",
+    "media:fetch": "node scripts/media-fetch.ts",
+    "deploy": "node scripts/deploy.ts"
+  },
+  "dependencies": {
+    "gsap": "3.15.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.60.0",
+    "@types/node": "26.6.2",
+    "typescript": "7.0.2",
+    "vite": "8.3.0"
+  }
+}
