@@ -8,11 +8,11 @@ You describe the talk. The agent interviews you, gathers references, writes the 
 
 ![A lecture on context windows: a chat, then the one long text the model actually reads, filling up until the window is full.](.github/context-talk.gif)
 
-*A lecture on context windows: the chat you see, then everything the model reads. [Watch the talk](https://guy915.github.io/nb2410-context/)*
+*A lecture on context windows: the chat you see, then everything the model reads. [Watch the talk](https://guy915.github.io/presentation-computational-sciences/)*
 
 ![A lecture on how language models work: ten guesses for the next token, one picked and appended, then the temperature dial turned down and up.](.github/llm-talk.gif)
 
-*A lecture on how language models work: next-token sampling, with the temperature turned down and up. [Watch the talk](https://guy915.github.io/llm-website-slides-deck/)*
+*A lecture on how language models work: next-token sampling, with the temperature turned down and up. [Watch the talk](https://guy915.github.io/presentation-sbi/)*
 
 ![The speaker view during a talk: each beat's cue and script on the left, the next and current slides on the right, and the pace against the plan above.](.github/speaker-view.gif)
 
